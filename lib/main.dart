@@ -1,9 +1,15 @@
+import 'package:farnfond/screens/home_screen.dart';
+import 'package:farnfond/screens/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -16,60 +22,81 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    final storage = GetStorage();
+    final bool hasSeenOnboarding = storage.read('hasSeenOnboarding') ?? false;
+
+    return GetMaterialApp(
+      routes: {
+        "/": (context) => const HomeScreen(),
+        "/onboarding": (context) => const OnboardingScreen(),
+      },
+      initialRoute: hasSeenOnboarding ? "/" : "/onboarding",
+      title: "Far n' Fond",
+      theme: ThemeData.dark(
         useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      ).copyWith(
+        textTheme:
+            GoogleFonts.rubikTextTheme(Theme.of(context).textTheme).copyWith(
+          labelSmall: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          labelMedium: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          labelLarge: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          displaySmall: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          displayMedium: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          displayLarge: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          bodySmall: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          bodyMedium: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          bodyLarge: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          headlineSmall: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          headlineMedium: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          headlineLarge: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          titleSmall: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          titleMedium: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
+          titleLarge: const TextStyle(
+            color: Color(0xFFF4F4FB),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        scaffoldBackgroundColor: const Color(0xFF000000),
+        colorScheme: const ColorScheme(
+          primary: Color(0xFF5E69EE),
+          secondary: Color(0xFFF4F4FB),
+          surface: Color(0xFF000000),
+          tertiary: Color(0xFF39AFEA),
+          brightness: Brightness.dark,
+          error: Color(0xFFD32F2F),
+          onSurface: Color(0xFFF4F4FB),
+          onError: Color(0xFFF4F4FB),
+          onPrimary: Color(0xFFF4F4FB),
+          onTertiary: Color(0xFF000000),
+          onSecondary: Color(0xFF5E69EE),
+        ),
       ),
     );
   }
