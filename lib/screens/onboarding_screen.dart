@@ -2,6 +2,7 @@ import 'package:farnfond/core/onboarding_image.dart';
 import 'package:farnfond/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -13,6 +14,8 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final storage = GetStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

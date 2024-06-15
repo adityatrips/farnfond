@@ -5,7 +5,9 @@ import 'package:farnfond/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({
@@ -73,9 +75,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final storage = GetStorage();
 
   void signUp() async {
     String uniqueId = generateRandomString(10);
+    String chatroomId = const Uuid().v4();
     if (formKey.currentState!.validate()) {
       if (await getPermissions()) {
         auth
@@ -93,6 +97,30 @@ class _SignupScreenState extends State<SignupScreen> {
             "key": uniqueId,
             "name": name.text,
             "partnerCode": partnerCode.text,
+            "chatroom": chatroomId,
+          }).then((value) {
+            if (partnerCode.text != "") {
+              firestore
+                  .collection("users")
+                  .doc(partnerCode.text)
+                  .get()
+                  .then((doc) {
+                firestore.collection("users").doc(partnerCode.text).update({
+                  "partnerCode": uniqueId,
+                  "chatroom": chatroomId,
+                });
+                firestore.collection("chat").doc(chatroomId).set({
+                  "messages": [],
+                });
+                storage.write("chatroom", chatroomId);
+              }).catchError((error) {
+                Get.snackbar(
+                  "Error",
+                  error.toString(),
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              });
+            }
           }).catchError((error) {
             Get.snackbar(
               "Error",

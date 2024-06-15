@@ -1,3 +1,4 @@
+import 'package:clickable_widget/clickable_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farnfond/core/global_state.dart';
 import 'package:farnfond/core/models/app_user.dart';
@@ -35,20 +36,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   TextEditingController message = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     void sendMessage() async {
-      await firestore
-          .collection("chat")
-          .doc(controller.userData.value['chatroom'].toString())
-          .update({
+      await firestore.collection("chat").doc(storage.read("chatroom")).update({
         "messages": FieldValue.arrayUnion([
           {
             "text": message.text,
@@ -78,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 stream: FirebaseFirestore.instance
                     .collection("chat")
                     .doc(
-                      controller.userData.value['chatroom'].toString(),
+                      storage.read("chatroom"),
                     )
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -92,7 +85,67 @@ class _ChatScreenState extends State<ChatScreen> {
                       final message = data['messages'][index];
                       bool isMe = message['sender'] ==
                           FirebaseAuth.instance.currentUser!.displayName;
-                      return Column(
+                      return ClickableColumn(
+                        onLongPress: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              if (isMe) {
+                                return AlertDialog(
+                                  title: const Text("Delete Message"),
+                                  content: const Text(
+                                      "Are you sure you want to delete this message?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        firestore
+                                            .collection("chat")
+                                            .doc(storage.read("chatroom"))
+                                            .update({
+                                          "messages": FieldValue.arrayRemove([
+                                            {
+                                              "text": message['text'],
+                                              "sender": message['sender'],
+                                              "time": message['time'],
+                                            }
+                                          ])
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Delete"),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return AlertDialog(
+                                  title: const Text("Report Message"),
+                                  content: const Text(
+                                      "Are you sure you want to report this message?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Report"),
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          );
+                        },
                         children: [
                           Container(
                             margin: const EdgeInsets.symmetric(

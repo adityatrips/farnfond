@@ -5,6 +5,7 @@ import 'package:farnfond/screens/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -16,40 +17,67 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  final formKey = GlobalKey<FormState>();
+  final globalController = Get.put(GlobalStateController());
+  final storage = GetStorage();
+
+  void login() async {
+    if (formKey.currentState!.validate()) {
+      _login();
+    }
+  }
+
+  void _login() async {
+    await auth
+        .signInWithEmailAndPassword(
+          email: email.text,
+          password: password.text,
+        )
+        .then((value) async {
+          final userData = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser!.displayName)
+              .get();
+          storage.writeInMemory("chatroom", userData.data()!["chatroom"]);
+          storage.writeInMemory("partnerCode", userData.data()!["partnerCode"]);
+          storage.writeInMemory("key", userData.data()!["key"]);
+          storage.write("username", email.text);
+          storage.write("password", password.text);
+          globalController.updateUserData(userData.data()!);
+        })
+        .then((value) => Get.to(() => const HomeScreen()))
+        .catchError(
+          (error) {
+            Get.snackbar(
+              "Error",
+              error.toString(),
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          },
+        );
+  }
+
   @override
-  Widget build(BuildContext context) {
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
-    FirebaseAuth auth = FirebaseAuth.instance;
+  void initState() {
+    String username = storage.read("username");
+    String pword = storage.read("password");
 
-    final formKey = GlobalKey<FormState>();
-    final globalController = Get.put(GlobalStateController());
-
-    void login() async {
-      if (formKey.currentState!.validate()) {
-        await auth
-            .signInWithEmailAndPassword(
-              email: email.text,
-              password: password.text,
-            )
-            .then((value) async {
-              final userData = await FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(FirebaseAuth.instance.currentUser!.displayName)
-                  .get();
-              globalController.updateUserData(userData.data()!);
-            })
-            .then((value) => Get.to(() => const HomeScreen()))
-            .catchError((error) {
-              Get.snackbar(
-                "Error",
-                error.toString(),
-                snackPosition: SnackPosition.BOTTOM,
-              );
-            });
-      }
+    if (!(username.isEmpty && pword.isEmpty)) {
+      email.text = username;
+      password.text = pword;
     }
 
+    // _login();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(

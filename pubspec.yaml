@@ -26,6 +26,7 @@ dependencies:
   firebase_storage: ^11.7.7
   flip_card: ^0.7.0
   uuid: ^4.4.0
+  clickable_widget: ^0.0.5
 
 dev_dependencies:
   flutter_test:
