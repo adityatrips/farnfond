@@ -1,5 +1,5 @@
 name: farnfond
-description: "A new Flutter project."
+description: 'A new Flutter project.'
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
@@ -9,7 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  firebase_core: ^3.0.0
   get: ^4.6.6
   google_fonts: ^6.2.1
   introduction_screen: ^3.1.14
@@ -20,6 +19,13 @@ dependencies:
   permission_handler: ^11.3.1
   disable_battery_optimization: ^1.1.1
   geolocator: ^12.0.0
+  firebase_core: ^2.24.2
+  sliding_up_panel: ^2.0.0+1
+  cloud_firestore: ^4.14.0
+  firebase_auth: ^4.16.0
+  firebase_storage: ^11.7.7
+  flip_card: ^0.7.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:

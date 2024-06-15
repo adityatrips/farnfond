@@ -1,66 +1,30 @@
 import 'package:farnfond/core/onboarding_image.dart';
+import 'package:farnfond/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  @override
   Widget build(BuildContext context) {
-    final storage = GetStorage();
-
-    Future<bool> getPermissions() async {
-      var locationStatus = await Permission.location.request();
-      var locationAlwaysStatus = await Permission.locationAlways.request();
-      var ignoreBatteryOptimizations =
-          await Permission.ignoreBatteryOptimizations.request();
-
-      if (!locationStatus.isGranted) {
-        Get.snackbar(
-          "Location Permission Required",
-          "Please enable location permissions to use the app.",
-        );
-      }
-
-      if (!locationAlwaysStatus.isGranted) {
-        Get.snackbar(
-          "Location Permission Required",
-          "Please enable location permissions to use the app.",
-        );
-      }
-
-      if (!ignoreBatteryOptimizations.isGranted) {
-        Get.snackbar(
-          "Battery Optimization Permission Required",
-          "Please disable battery optimizations for the app to work properly.",
-        );
-      }
-
-      return await Permission.location.isGranted &&
-          await Permission.locationAlways.isGranted &&
-          await Permission.ignoreBatteryOptimizations.isGranted;
-    }
-
-    return SafeArea(
-      child: Scaffold(
-        body: IntroductionScreen(
+    return Scaffold(
+      body: SafeArea(
+        child: IntroductionScreen(
           showBackButton: true,
           back: const Icon(Icons.arrow_back_rounded),
           showBottomPart: true,
           showDoneButton: true,
           done: const Icon(Icons.done_rounded),
           onDone: () {
-            getPermissions().then((bool value) {
-              if (!value) {
-                return;
-              }
-              storage.write('hasSeenOnboarding', true);
-              Get.offAndToNamed('/');
-            });
+            Get.offAll(() => const LoginScreen());
           },
           showNextButton: true,
           next: const Icon(Icons.arrow_forward_rounded),

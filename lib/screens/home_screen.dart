@@ -1,92 +1,132 @@
+import 'package:farnfond/core/map_component.dart';
+import 'package:farnfond/screens/chat_screen.dart';
+import 'package:farnfond/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:interactive_bottom_sheet/interactive_bottom_sheet.dart';
-
-class HomeController extends GetxController {
-  RxInt funCount = 0.obs;
-
-  void increment() {
-    funCount.value++;
-  }
-}
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<BitmapDescriptor> _getMarkerAsset(String assetName) async {
-    return BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(
-        size: Size.fromRadius(5),
+  @override
+  Widget build(BuildContext context) {
+    final key = GlobalKey<ScaffoldState>();
+
+    return SafeArea(
+      child: Scaffold(
+        key: key,
+        drawer: Drawer(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                height: 200,
+                width: double.maxFinite,
+                child: Center(
+                  child: Text(
+                    "Far n' Fond",
+                    style: Theme.of(context).textTheme.headlineMedium!,
+                  ),
+                ),
+              ),
+              const ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home_rounded),
+              ),
+              const ListTile(
+                title: Text("Profile"),
+                leading: Icon(Icons.person_rounded),
+              ),
+              const ListTile(
+                title: Text("Settings"),
+                leading: Icon(Icons.settings_rounded),
+              ),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              key.currentState!.openDrawer();
+            },
+            icon: const Icon(Icons.menu_rounded),
+          ),
+          title: Text(
+            "Welcome home",
+            style: Theme.of(context).textTheme.headlineMedium!,
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Get.offAll(() => const LoginScreen());
+              },
+              icon: const Icon(Icons.logout),
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: SlidingUpPanel(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            backdropEnabled: true,
+            backdropColor: Colors.black12,
+            backdropTapClosesPanel: true,
+            parallaxEnabled: true,
+            parallaxOffset: .5,
+            minHeight: 76,
+            panel: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Get.to(() => const ChatScreen());
+                    },
+                    style: iconBtnStyle(),
+                    icon: const Icon(
+                      Icons.chat_bubble_rounded,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    style: iconBtnStyle(),
+                    icon: const Icon(
+                      Icons.phone_rounded,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    style: iconBtnStyle(),
+                    icon: const Icon(
+                      Icons.video_call_rounded,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            body: const MapComponent(),
+          ),
+        ),
       ),
-      assetName,
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomSheet: InteractiveBottomSheet(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Center(
-              child: Text("Hello"),
-            ),
-          ),
-          draggableAreaOptions: DraggableAreaOptions(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            indicatorColor: Theme.of(context).colorScheme.primary,
-          ),
-          options: InteractiveBottomSheetOptions(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          ),
-        ),
-        body: FutureBuilder(
-          future: _getMarkerAsset('assets/onboarding_one.png'),
-          builder: (context, snapshot) {
-            final BitmapDescriptor icon =
-                snapshot.data ?? BitmapDescriptor.defaultMarker;
-
-            return StreamBuilder(
-              stream: Geolocator.getPositionStream(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else {
-                  return GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        snapshot.data!.latitude,
-                        snapshot.data!.longitude,
-                      ),
-                      zoom: 17,
-                    ),
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    mapType: MapType.normal,
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId("Me"),
-                        icon: icon,
-                        position: LatLng(
-                          snapshot.data?.latitude ?? 0,
-                          snapshot.data?.longitude ?? 0,
-                        ),
-                      ),
-                    },
-                  );
-                }
-              },
-            );
-          },
-        ),
+  ButtonStyle iconBtnStyle() {
+    return IconButton.styleFrom(
+      backgroundColor: Theme.of(Get.context!).colorScheme.primary,
+      foregroundColor: Theme.of(Get.context!).colorScheme.onPrimary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
+      fixedSize: const Size.square(60),
     );
   }
 }
