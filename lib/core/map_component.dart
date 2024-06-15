@@ -26,8 +26,16 @@ class MapComponent extends StatelessWidget {
           stream: Geolocator.getPositionStream(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height - 200,
+                    width: 50,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ],
               );
             } else {
               return GoogleMap(
