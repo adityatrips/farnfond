@@ -26,11 +26,13 @@ class MyApp extends StatelessWidget {
     final bool hasSeenOnboarding = storage.read('hasSeenOnboarding') ?? false;
 
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         "/": (context) => const HomeScreen(),
         "/onboarding": (context) => const OnboardingScreen(),
       },
       initialRoute: hasSeenOnboarding ? "/" : "/onboarding",
+      // initialRoute: "/onboarding",
       title: "Far n' Fond",
       theme: ThemeData.dark(
         useMaterial3: true,
@@ -46,15 +48,9 @@ class MyApp extends StatelessWidget {
           labelLarge: const TextStyle(
             color: Color(0xFFF4F4FB),
           ),
-          displaySmall: const TextStyle(
-            color: Color(0xFFF4F4FB),
-          ),
-          displayMedium: const TextStyle(
-            color: Color(0xFFF4F4FB),
-          ),
-          displayLarge: const TextStyle(
-            color: Color(0xFFF4F4FB),
-          ),
+          displaySmall: GoogleFonts.sacramento(),
+          displayMedium: GoogleFonts.sacramento(),
+          displayLarge: GoogleFonts.sacramento(),
           bodySmall: const TextStyle(
             color: Color(0xFFF4F4FB),
           ),
@@ -83,18 +79,18 @@ class MyApp extends StatelessWidget {
             color: Color(0xFFF4F4FB),
           ),
         ),
-        scaffoldBackgroundColor: const Color(0xFF000000),
+        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
         colorScheme: const ColorScheme(
           primary: Color(0xFF5E69EE),
           secondary: Color(0xFFF4F4FB),
-          surface: Color(0xFF000000),
+          surface: Color(0xFF1A1A1A),
           tertiary: Color(0xFF39AFEA),
           brightness: Brightness.dark,
           error: Color(0xFFD32F2F),
           onSurface: Color(0xFFF4F4FB),
           onError: Color(0xFFF4F4FB),
           onPrimary: Color(0xFFF4F4FB),
-          onTertiary: Color(0xFF000000),
+          onTertiary: Color(0xFF1A1A1A),
           onSecondary: Color(0xFF5E69EE),
         ),
       ),

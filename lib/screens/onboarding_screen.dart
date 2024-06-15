@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -11,7 +12,38 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final storage = GetStorage();
-    // final bool hasSeenOnboarding = storage.read('hasSeenOnboarding') ?? false;
+
+    Future<bool> getPermissions() async {
+      var locationStatus = await Permission.location.request();
+      var locationAlwaysStatus = await Permission.locationAlways.request();
+      var ignoreBatteryOptimizations =
+          await Permission.ignoreBatteryOptimizations.request();
+
+      if (!locationStatus.isGranted) {
+        Get.snackbar(
+          "Location Permission Required",
+          "Please enable location permissions to use the app.",
+        );
+      }
+
+      if (!locationAlwaysStatus.isGranted) {
+        Get.snackbar(
+          "Location Permission Required",
+          "Please enable location permissions to use the app.",
+        );
+      }
+
+      if (!ignoreBatteryOptimizations.isGranted) {
+        Get.snackbar(
+          "Battery Optimization Permission Required",
+          "Please disable battery optimizations for the app to work properly.",
+        );
+      }
+
+      return await Permission.location.isGranted &&
+          await Permission.locationAlways.isGranted &&
+          await Permission.ignoreBatteryOptimizations.isGranted;
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -22,8 +54,13 @@ class OnboardingScreen extends StatelessWidget {
           showDoneButton: true,
           done: const Icon(Icons.done_rounded),
           onDone: () {
-            storage.write('hasSeenOnboarding', true);
-            Get.offAndToNamed('/');
+            getPermissions().then((bool value) {
+              if (!value) {
+                return;
+              }
+              storage.write('hasSeenOnboarding', true);
+              Get.offAndToNamed('/');
+            });
           },
           showNextButton: true,
           next: const Icon(Icons.arrow_forward_rounded),
@@ -32,7 +69,7 @@ class OnboardingScreen extends StatelessWidget {
             PageViewModel(
               titleWidget: Text(
                 "Welcome to Far n' Fond!",
-                style: GoogleFonts.playfairDisplay(
+                style: GoogleFonts.sacramento(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -50,7 +87,7 @@ class OnboardingScreen extends StatelessWidget {
             PageViewModel(
               titleWidget: Text(
                 "Stay Connected",
-                style: GoogleFonts.playfairDisplay(
+                style: GoogleFonts.sacramento(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -69,7 +106,7 @@ class OnboardingScreen extends StatelessWidget {
             PageViewModel(
               titleWidget: Text(
                 "Create Memories",
-                style: GoogleFonts.playfairDisplay(
+                style: GoogleFonts.sacramento(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
