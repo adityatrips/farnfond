@@ -1,4 +1,5 @@
 import 'package:farnfond/core/global_state.dart';
+import 'package:farnfond/screens/home_screen.dart';
 import 'package:farnfond/screens/onboarding_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +34,8 @@ class _MyAppState extends State<MyApp> {
     userStream.listen((user) {
       if (user == null) {
         Get.offAll(() => const OnboardingScreen());
+      } else {
+        Get.offAll(() => const HomeScreen());
       }
     });
     super.initState();
