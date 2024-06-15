@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -15,6 +16,34 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final storage = GetStorage();
+
+  void getPermission() async {
+    const location = Permission.location;
+    const locationAlways = Permission.locationAlways;
+    const ignoreBatteryOptimization = Permission.ignoreBatteryOptimizations;
+    const mediaLibrary = Permission.mediaLibrary;
+    const storage = Permission.storage;
+
+    await location.request();
+    await locationAlways.request();
+    await ignoreBatteryOptimization.request();
+    await mediaLibrary.request();
+    await storage.request();
+
+    if (!(await location.isGranted &&
+        await locationAlways.isGranted &&
+        await ignoreBatteryOptimization.isGranted &&
+        await mediaLibrary.isGranted &&
+        await storage.isGranted)) {
+      getPermission();
+    }
+  }
+
+  @override
+  void initState() {
+    getPermission();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

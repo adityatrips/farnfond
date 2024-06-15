@@ -63,13 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    String username = storage.read("username");
-    String pword = storage.read("password");
+    String? username = storage.read("username");
+    String? pword = storage.read("password");
 
-    if (!(username.isEmpty && pword.isEmpty)) {
-      email.text = username;
-      password.text = pword;
-    }
+    email.text = username ?? "";
+    password.text = pword ?? "";
 
     // _login();
 

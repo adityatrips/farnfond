@@ -1,4 +1,3 @@
-import 'package:farnfond/core/global_state.dart';
 import 'package:farnfond/screens/home_screen.dart';
 import 'package:farnfond/screens/onboarding_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,11 +51,6 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Far n' Fond",
-      initialBinding: BindingsBuilder(
-        () {
-          Get.lazyPut<GlobalStateController>(() => GlobalStateController());
-        },
-      ),
       defaultTransition: Transition.downToUp,
       transitionDuration: const Duration(milliseconds: 500),
       theme: ThemeData.dark(
