@@ -1,0 +1,8 @@
+flutter_native_splash:
+  color: '#1A1A1A'
+  image: assets/far_n_fond.png
+  android_12:
+    image: assets/far_n_fond_transparent.png
+  android: true
+  ios: true
+  web: false

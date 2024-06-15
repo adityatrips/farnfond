@@ -27,6 +27,8 @@ dependencies:
   flip_card: ^0.7.0
   uuid: ^4.4.0
   clickable_widget: ^0.0.5
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -36,3 +38,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+
+flutter_launcher_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/far_n_fond.png'
+  min_sdk_android: 21 # android min sdk min:16, default 21
