@@ -155,8 +155,9 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Form(
           key: formKey,
           child: ListView(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
             children: [
-              const Spacer(),
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: "Enter your name",
@@ -211,6 +212,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ElevatedButton(
                 onPressed: () {
                   showDatePicker(
+                    locale: const Locale("en", "IN"),
                     context: Get.context!,
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
@@ -230,6 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ElevatedButton(
                 onPressed: () {
                   showDatePicker(
+                    locale: const Locale("en", "IN"),
                     context: Get.context!,
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
@@ -253,7 +256,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () => Get.offAll(() => const LoginScreen()),
                 child: const Text("Already have an account? Login"),
               ),
-              const Spacer(),
+              // const Spacer(),
             ],
           ),
         ),

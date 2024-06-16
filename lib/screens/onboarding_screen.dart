@@ -21,20 +21,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     const location = Permission.location;
     const locationAlways = Permission.locationAlways;
     const ignoreBatteryOptimization = Permission.ignoreBatteryOptimizations;
-    const mediaLibrary = Permission.mediaLibrary;
-    const storage = Permission.storage;
 
     await location.request();
     await locationAlways.request();
     await ignoreBatteryOptimization.request();
-    await mediaLibrary.request();
-    await storage.request();
+    // await mediaLibrary.request();
+    // await storage.request();
 
     if (!(await location.isGranted &&
-        await locationAlways.isGranted &&
-        await ignoreBatteryOptimization.isGranted &&
-        await mediaLibrary.isGranted &&
-        await storage.isGranted)) {
+            await locationAlways.isGranted &&
+            await ignoreBatteryOptimization.isGranted
+        // await mediaLibrary.isGranted
+        // await storage.isGranted,
+        )) {
       getPermission();
     }
   }
