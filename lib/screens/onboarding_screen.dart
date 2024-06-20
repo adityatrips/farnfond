@@ -17,31 +17,36 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final storage = GetStorage();
 
-  void getPermission() async {
-    const location = Permission.location;
-    const locationAlways = Permission.locationAlways;
-    const ignoreBatteryOptimization = Permission.ignoreBatteryOptimizations;
+  Future<void> requestPermissions() async {
+    Map<Permission, PermissionStatus> status = await [
+      Permission.location,
+      Permission.locationAlways,
+      Permission.ignoreBatteryOptimizations,
+    ].request();
 
-    await location.request();
-    await locationAlways.request();
-    await ignoreBatteryOptimization.request();
-    // await mediaLibrary.request();
-    // await storage.request();
-
-    if (!(await location.isGranted &&
-            await locationAlways.isGranted &&
-            await ignoreBatteryOptimization.isGranted
-        // await mediaLibrary.isGranted
-        // await storage.isGranted,
-        )) {
-      getPermission();
+    if (status[Permission.location]!.isDenied ||
+        status[Permission.locationAlways]!.isDenied ||
+        status[Permission.ignoreBatteryOptimizations]!.isDenied) {
+      openAppSettings();
     }
+
+    return;
   }
 
   @override
   void initState() {
-    getPermission();
+    if (storage.read('onboarding') == true) {
+      Get.offAll(() => const LoginScreen());
+    } else {
+      requestPermissions();
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    storage.write('onboarding', true);
+    super.dispose();
   }
 
   @override

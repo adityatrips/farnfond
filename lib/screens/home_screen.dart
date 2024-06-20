@@ -1,6 +1,7 @@
 import 'package:farnfond/core/map_component.dart';
 import 'package:farnfond/screens/chat_screen.dart';
 import 'package:farnfond/screens/login_screen.dart';
+import 'package:farnfond/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,9 +39,12 @@ class HomeScreen extends StatelessWidget {
                 title: Text("Home"),
                 leading: Icon(Icons.home_rounded),
               ),
-              const ListTile(
-                title: Text("Profile"),
-                leading: Icon(Icons.person_rounded),
+              ListTile(
+                title: const Text("Profile"),
+                leading: const Icon(Icons.person_rounded),
+                onTap: () => Get.to(
+                  () => const ProfileScreen(),
+                ),
               ),
               const ListTile(
                 title: Text("Settings"),

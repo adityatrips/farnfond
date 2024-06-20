@@ -62,6 +62,21 @@ class _MyAppState extends State<MyApp> {
             foregroundColor: const Color(0xFF5E69EE),
           ),
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF5E69EE),
+            fixedSize: const Size(
+              double.maxFinite,
+              50,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            side: const BorderSide(
+              color: Color(0xFF5E69EE),
+            ),
+          ),
+        ),
         textTheme:
             GoogleFonts.rubikTextTheme(Theme.of(context).textTheme).copyWith(
           labelSmall: const TextStyle(
