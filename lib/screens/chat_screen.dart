@@ -60,7 +60,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else {
                 final messages = snapshot.data!.data()!["messages"];
 
@@ -75,95 +77,79 @@ class _ChatScreenState extends State<ChatScreen> {
                           var message = messages[index];
 
                           return Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Container(
-                                margin: FirebaseAuth.instance.currentUser!
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Container(
+                              margin: FirebaseAuth
+                                          .instance.currentUser!.displayName ==
+                                      message['sender']
+                                  ? const EdgeInsets.only(left: 50)
+                                  : const EdgeInsets.only(right: 50),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: FirebaseAuth.instance.currentUser!
                                             .displayName ==
                                         message['sender']
-                                    ? const EdgeInsets.only(left: 50)
-                                    : const EdgeInsets.only(right: 50),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: FirebaseAuth.instance.currentUser!
-                                              .displayName ==
-                                          message['sender']
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.secondary,
-                                ),
-                                height: 50,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: FirebaseAuth.instance
-                                              .currentUser!.displayName !=
-                                          message['sender']
-                                      ? CrossAxisAlignment.start
-                                      : CrossAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: FirebaseAuth.instance
-                                                  .currentUser!.displayName ==
-                                              message['sender']
-                                          ? const EdgeInsets.only(right: 20.0)
-                                          : const EdgeInsets.only(left: 20.0),
-                                      child: Text(
-                                        message['text'].toString(),
-                                        style: TextStyle(
-                                          color: FirebaseAuth
-                                                      .instance
-                                                      .currentUser!
-                                                      .displayName ==
-                                                  message['sender']
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondary,
-                                        ),
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.secondary,
+                              ),
+                              height: 50,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: FirebaseAuth.instance
+                                            .currentUser!.displayName !=
+                                        message['sender']
+                                    ? CrossAxisAlignment.start
+                                    : CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: FirebaseAuth.instance.currentUser!
+                                                .displayName ==
+                                            message['sender']
+                                        ? const EdgeInsets.only(right: 20.0)
+                                        : const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      message['text'].toString(),
+                                      style: TextStyle(
+                                        color: FirebaseAuth.instance
+                                                    .currentUser!.displayName ==
+                                                message['sender']
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: FirebaseAuth.instance
-                                                  .currentUser!.displayName ==
-                                              message['sender']
-                                          ? const EdgeInsets.only(right: 20.0)
-                                          : const EdgeInsets.only(left: 20.0),
-                                      child: Text(
-                                        DateFormat("dd MMM, yyyy hh:mm a")
-                                            .format(
-                                          (message['time']! as Timestamp)
-                                              .toDate(),
-                                        ),
-                                        style: TextStyle(
-                                          color: FirebaseAuth
-                                                      .instance
-                                                      .currentUser!
-                                                      .displayName ==
-                                                  message['sender']
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondary,
-                                        ),
+                                  ),
+                                  Padding(
+                                    padding: FirebaseAuth.instance.currentUser!
+                                                .displayName ==
+                                            message['sender']
+                                        ? const EdgeInsets.only(right: 20.0)
+                                        : const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      DateFormat("dd MMM, yyyy hh:mm a").format(
+                                        (message['time']! as Timestamp)
+                                            .toDate(),
+                                      ),
+                                      style: TextStyle(
+                                        color: FirebaseAuth.instance
+                                                    .currentUser!.displayName ==
+                                                message['sender']
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-
-                              // ListTile(
-                              //   shape: const RoundedRectangleBorder(
-                              //     borderRadius: BorderRadius.all(
-                              //       Radius.circular(25),
-                              //     ),
-                              //   ),
-                              //   tileColor: Colors.blue[100],
-                              // title:
-                              // subtitle:
-                              // )
-                              );
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ),

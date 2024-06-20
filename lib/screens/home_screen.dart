@@ -17,49 +17,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         key: key,
-        drawer: Drawer(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                height: 200,
-                width: double.maxFinite,
-                child: Center(
-                  child: Text(
-                    "Far n' Fond",
-                    style: Theme.of(context).textTheme.headlineMedium!,
-                  ),
-                ),
-              ),
-              const ListTile(
-                title: Text("Home"),
-                leading: Icon(Icons.home_rounded),
-              ),
-              ListTile(
-                title: const Text("Profile"),
-                leading: const Icon(Icons.person_rounded),
-                onTap: () => Get.to(
-                  () => const ProfileScreen(),
-                ),
-              ),
-              const ListTile(
-                title: Text("Settings"),
-                leading: Icon(Icons.settings_rounded),
-              ),
-            ],
-          ),
-        ),
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              key.currentState!.openDrawer();
-            },
-            icon: const Icon(Icons.menu_rounded),
-          ),
           title: Text(
             "Welcome home",
             style: Theme.of(context).textTheme.headlineMedium!,
@@ -111,6 +69,13 @@ class HomeScreen extends StatelessWidget {
                     style: iconBtnStyle(),
                     icon: const Icon(
                       Icons.video_call_rounded,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Get.to(() => const ProfileScreen()),
+                    style: iconBtnStyle(),
+                    icon: const Icon(
+                      Icons.person_rounded,
                     ),
                   ),
                 ],

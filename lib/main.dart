@@ -3,6 +3,7 @@ import 'package:farnfond/screens/onboarding_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,11 +11,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FlutterNativeSplash.preserve(
+    widgetsBinding: binding,
+  );
+  await Future.delayed(
+    const Duration(
+      milliseconds: 2500,
+    ),
+  );
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
